@@ -64,7 +64,6 @@ TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList<T>.Count.get -> i
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList<T>.Enumerator
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList<T>.Enumerator.Current.get -> T
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList<T>.Enumerator.Dispose() -> void
-TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList<T>.Enumerator.Enumerator() -> void
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList<T>.Enumerator.MoveNext() -> bool
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList<T>.Enumerator.Reset() -> void
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList<T>.Exists(System.Predicate<T> match) -> bool
