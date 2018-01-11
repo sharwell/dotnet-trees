@@ -6,10 +6,12 @@ namespace TunnelVisionLabs.Collections.Trees.Benchmarks.Immutable
     using System.Collections.Immutable;
     using System.Linq;
     using BenchmarkDotNet.Attributes;
+    using BenchmarkDotNet.Attributes.Jobs;
     using TunnelVisionLabs.Collections.Trees.Immutable;
 
     public class ImmutableTreeListBenchmark
     {
+        [ShortRunJob]
         public class RangeToList
         {
             [Params(10, 1000, 100000, 10000000)]
