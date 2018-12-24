@@ -113,6 +113,12 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             var result = _treeSet.Add(new KeyValuePair<TKey, TValue>(key, value));
             if (result == _treeSet)
             {
+                if (!_treeSet.TryGetValue(new KeyValuePair<TKey, TValue>(key, default), out KeyValuePair<TKey, TValue> existingPair)
+                    || !ValueComparer.Equals(existingPair.Value, value))
+                {
+                    throw new ArgumentException();
+                }
+
                 return this;
             }
 
@@ -199,7 +205,25 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
         public ImmutableTreeDictionary<TKey, TValue> WithComparers(IEqualityComparer<TKey> keyComparer)
             => WithComparers(keyComparer, valueComparer: null);
 
-        public ImmutableTreeDictionary<TKey, TValue> WithComparers(IEqualityComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer) => throw null;
+        public ImmutableTreeDictionary<TKey, TValue> WithComparers(IEqualityComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer)
+        {
+            keyComparer = keyComparer ?? EqualityComparer<TKey>.Default;
+            valueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
+            if (KeyComparer == keyComparer)
+            {
+                if (ValueComparer == valueComparer)
+                {
+                    return this;
+                }
+                else
+                {
+                    // Don't need to reconstruct the tree because the key comparer is the same
+                    return new ImmutableTreeDictionary<TKey, TValue>(_treeSet, keyComparer, valueComparer);
+                }
+            }
+
+            throw null;
+        }
 
         public Builder ToBuilder() => new Builder(this);
 

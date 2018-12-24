@@ -45,15 +45,15 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 }
             }
 
-            ICollection<TKey> IDictionary<TKey, TValue>.Keys => throw null;
+            ICollection<TKey> IDictionary<TKey, TValue>.Keys => ToImmutable().Keys;
 
-            ICollection<TValue> IDictionary<TKey, TValue>.Values => throw null;
+            ICollection<TValue> IDictionary<TKey, TValue>.Values => ToImmutable().Values;
 
             bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => false;
 
-            ICollection IDictionary.Keys => throw null;
+            ICollection IDictionary.Keys => ToImmutable().Keys;
 
-            ICollection IDictionary.Values => throw null;
+            ICollection IDictionary.Values => ToImmutable().Values;
 
             bool IDictionary.IsReadOnly => false;
 
@@ -75,7 +75,16 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 set => throw null;
             }
 
-            public void Add(TKey key, TValue value) => throw null;
+            public void Add(TKey key, TValue value)
+            {
+                if (!_treeSetBuilder.Add(new KeyValuePair<TKey, TValue>(key, value)))
+                {
+                    if (!ValueComparer.Equals(value, value))
+                    {
+                        throw new ArgumentException();
+                    }
+                }
+            }
 
             public void Add(KeyValuePair<TKey, TValue> item)
                 => Add(item.Key, item.Value);
@@ -130,9 +139,11 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 _treeSetBuilder.ExceptWith(keys.Select(key => new KeyValuePair<TKey, TValue>(key, default)));
             }
 
-            public bool TryGetKey(TKey equalKey, out TKey actualKey) => throw null;
+            public bool TryGetKey(TKey equalKey, out TKey actualKey)
+                => ToImmutable().TryGetKey(equalKey, out actualKey);
 
-            public bool TryGetValue(TKey key, out TValue value) => throw null;
+            public bool TryGetValue(TKey key, out TValue value)
+                => ToImmutable().TryGetValue(key, out value);
 
             public ImmutableTreeDictionary<TKey, TValue> ToImmutable()
             {

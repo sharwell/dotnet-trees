@@ -10,53 +10,84 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
     public sealed partial class ImmutableSortedTreeSet<T> : IImmutableSet<T>, ISet<T>, IList<T>, IReadOnlyList<T>, IList
     {
-        public static readonly ImmutableSortedTreeSet<T> Empty;
+        public static readonly ImmutableSortedTreeSet<T> Empty = new ImmutableSortedTreeSet<T>(ImmutableSortedTreeList<T>.Empty);
 
-        public IComparer<T> KeyComparer => throw null;
+        private readonly ImmutableSortedTreeList<T> _sortedList;
 
-        public int Count => throw null;
+        internal ImmutableSortedTreeSet(ImmutableSortedTreeList<T> sortedList)
+        {
+            _sortedList = sortedList;
+        }
 
-        public bool IsEmpty => throw null;
+        public IComparer<T> KeyComparer => _sortedList.Comparer;
 
-        public T Max => throw null;
+        public int Count => _sortedList.Count;
 
-        public T Min => throw null;
+        public bool IsEmpty => _sortedList.IsEmpty;
 
-        bool ICollection<T>.IsReadOnly => throw null;
+        public T Max => _sortedList.Max;
 
-        bool ICollection.IsSynchronized => throw null;
+        public T Min => _sortedList.Min;
 
-        object ICollection.SyncRoot => throw null;
+        bool ICollection<T>.IsReadOnly => true;
 
-        bool IList.IsFixedSize => throw null;
+        bool ICollection.IsSynchronized => true;
 
-        bool IList.IsReadOnly => throw null;
+        object ICollection.SyncRoot => this;
 
-        public T this[int index] => throw null;
+        bool IList.IsFixedSize => true;
+
+        bool IList.IsReadOnly => true;
+
+        public T this[int index] => _sortedList[index];
 
         T IList<T>.this[int index]
         {
-            get => throw null;
-            set => throw null;
+            get => _sortedList[index];
+            set => throw new NotSupportedException();
         }
 
         object IList.this[int index]
         {
-            get => throw null;
-            set => throw null;
+            get => _sortedList[index];
+            set => throw new NotSupportedException();
         }
 
-        public ImmutableSortedTreeSet<T> Add(T value) => throw null;
+        public ImmutableSortedTreeSet<T> Add(T value)
+        {
+            var sortedList = _sortedList.Add(value, addIfPresent: false);
+            if (sortedList == _sortedList)
+                return this;
 
-        public ImmutableSortedTreeSet<T> Clear() => throw null;
+            return new ImmutableSortedTreeSet<T>(sortedList);
+        }
 
-        public bool Contains(T value) => throw null;
+        public ImmutableSortedTreeSet<T> Clear()
+        {
+            var sortedList = _sortedList.Clear();
+            if (sortedList == _sortedList)
+                return this;
 
-        public ImmutableSortedTreeSet<T> Except(IEnumerable<T> other) => throw null;
+            return new ImmutableSortedTreeSet<T>(sortedList);
+        }
 
-        public Enumerator GetEnumerator() => throw null;
+        public bool Contains(T value)
+            => _sortedList.Contains(value);
 
-        public int IndexOf(T item) => throw null;
+        public ImmutableSortedTreeSet<T> Except(IEnumerable<T> other)
+        {
+            var sortedList = _sortedList.RemoveRange(other);
+            if (sortedList == _sortedList)
+                return this;
+
+            return new ImmutableSortedTreeSet<T>(sortedList);
+        }
+
+        public Enumerator GetEnumerator()
+            => new Enumerator(_sortedList.GetEnumerator());
+
+        public int IndexOf(T item)
+            => _sortedList.IndexOf(item);
 
         public ImmutableSortedTreeSet<T> Intersect(IEnumerable<T> other) => throw null;
 
@@ -70,15 +101,34 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
         public bool Overlaps(IEnumerable<T> other) => throw null;
 
-        public ImmutableSortedTreeSet<T> Remove(T value) => throw null;
+        public ImmutableSortedTreeSet<T> Remove(T value)
+        {
+            var sortedList = _sortedList.Remove(value);
+            if (sortedList == _sortedList)
+                return this;
 
-        public IEnumerable<T> Reverse() => throw null;
+            return new ImmutableSortedTreeSet<T>(sortedList);
+        }
+
+        public IEnumerable<T> Reverse()
+            => _sortedList.Reverse();
 
         public bool SetEquals(IEnumerable<T> other) => throw null;
 
         public ImmutableSortedTreeSet<T> SymmetricExcept(IEnumerable<T> other) => throw null;
 
-        public bool TryGetValue(T equalValue, out T actualValue) => throw null;
+        public bool TryGetValue(T equalValue, out T actualValue)
+        {
+            var index = IndexOf(equalValue);
+            if (index < 0)
+            {
+                actualValue = default;
+                return false;
+            }
+
+            actualValue = this[index];
+            return true;
+        }
 
         public ImmutableSortedTreeSet<T> Union(IEnumerable<T> other) => throw null;
 

@@ -6,13 +6,13 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
     using System.Collections;
     using System.Collections.Generic;
 
-    public partial class ImmutableSortedTreeSet<T>
+    internal sealed partial class ImmutableSortedTreeList<T>
     {
         public struct Enumerator : IEnumerator<T>
         {
-            private ImmutableSortedTreeList<T>.Enumerator _enumerator;
+            private readonly ImmutableTreeList<T>.Enumerator _enumerator;
 
-            internal Enumerator(ImmutableSortedTreeList<T>.Enumerator enumerator)
+            internal Enumerator(ImmutableTreeList<T>.Enumerator enumerator)
             {
                 _enumerator = enumerator;
             }
@@ -21,11 +21,14 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
             object IEnumerator.Current => Current;
 
-            public void Dispose() => _enumerator.Dispose();
+            public void Dispose()
+                => _enumerator.Dispose();
 
-            public bool MoveNext() => _enumerator.MoveNext();
+            public bool MoveNext()
+                => _enumerator.MoveNext();
 
-            public void Reset() => _enumerator.Reset();
+            public void Reset()
+                => _enumerator.Reset();
         }
     }
 }
