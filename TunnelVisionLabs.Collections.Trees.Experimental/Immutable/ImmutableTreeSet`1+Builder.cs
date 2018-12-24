@@ -3,18 +3,23 @@
 
 namespace TunnelVisionLabs.Collections.Trees.Immutable
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
 
     public partial class ImmutableTreeSet<T>
     {
-        public sealed class Builder : ISet<T>, IReadOnlyCollection<T>
+        public sealed class Builder : ISet<T>, IReadOnlyCollection<T>, ICollection
         {
             public IEqualityComparer<T> KeyComparer => throw null;
 
             public int Count => throw null;
 
             bool ICollection<T>.IsReadOnly => throw null;
+
+            bool ICollection.IsSynchronized => throw null;
+
+            object ICollection.SyncRoot => throw null;
 
             public bool Add(T item) => throw null;
 
@@ -51,6 +56,8 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             void ICollection<T>.Add(T item) => throw null;
 
             void ICollection<T>.CopyTo(T[] array, int arrayIndex) => throw null;
+
+            void ICollection.CopyTo(Array array, int index) => throw null;
 
             IEnumerator<T> IEnumerable<T>.GetEnumerator() => throw null;
 

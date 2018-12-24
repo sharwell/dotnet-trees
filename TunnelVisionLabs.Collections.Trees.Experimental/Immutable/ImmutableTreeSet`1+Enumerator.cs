@@ -19,6 +19,8 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             public bool MoveNext() => throw null;
 
             public void Reset() => throw null;
+
+            internal void InternalReset() => throw null;
         }
     }
 }
